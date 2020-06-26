@@ -1,6 +1,7 @@
 const knex = require('knex')
 const app = require('../src/app')
 const helpers = require('./test-helpers')
+const supertest = require('supertest')
 
 describe('Things Endpoints', function() {
   let db
@@ -84,6 +85,26 @@ describe('Things Endpoints', function() {
       })
     })
   })
+  describe.only('protected endpoints', ()=>{
+    beforeEach('insert things', ()=>{
+      helpers.seedThingsTables(
+        db,
+        testUsers,
+        testThings,
+        testReviews,
+      )
+    })
+    describe('get /api/things/:thing_id', ()=>{
+      it('responds with 401 missing basic token', ()=>{
+        return supertest(app)
+        .get('/api/things/123')
+        .expect(401, {error: 'missing basic authorization'})
+      })
+    })
+
+  })
+
+
 
   describe(`GET /api/things/:thing_id`, () => {
     context(`Given no things`, () => {
