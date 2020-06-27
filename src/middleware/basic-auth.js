@@ -1,7 +1,8 @@
+const bcrypt = require('bcryptjs')
+
 function basicAuth(req, res, next) {
     const authToken = req.get('Authorization')
     let basicToken
-
 
     if (!authToken.toLowerCase().startsWith('basic ')){
         return res.status(401).json({error: 'missing basic authorization'})
@@ -19,12 +20,18 @@ function basicAuth(req, res, next) {
         .where({ user_name: tokenUserName })
         .first()
         .then(user =>{
-            if(!user || user.password !== tokenPassword){
+            if(!user){
                 return res.status(401).json({error: 'Unauthorized'})
             }
 
-            req.user = user
-            next()
+            return bcrypt.compare(tokenPassword, user.password)
+                .then(passwordMatch=>{
+                    if (!passwordMatch){
+                        return res.status(401).json({error: 'Unauthorized'})
+                    }
+                    req.user = user
+                    next()
+                })            
         })
     .catch(next)
 }
