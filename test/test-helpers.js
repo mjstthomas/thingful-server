@@ -224,13 +224,33 @@ function makeThingsFixtures() {
 }
 
 function cleanTables(db) {
-  return db.raw(
+  return db.transaction(trx =>
+    trx
+      .raw(
     `TRUNCATE
       thingful_things,
       thingful_users,
       thingful_reviews
       RESTART IDENTITY CASCADE`
   )
+  
+  .then(() =>
+    Promise.all([
+      trx.raw(
+        `ALTER SEQUENCE thingful_things_id_seq minvalue 0 START WITH 1`
+      ),
+      trx.raw(
+        `ALTER SEQUENCE thingful_users_id_seq minvalue 0 START WITH 1`
+      ),
+      trx.raw(
+        `ALTER SEQUENCE thingful_reviews_id_seq minvalue 0 START WITH 1`
+      ),
+      trx.raw(`SELECT setval('thingful_things_id_seq', 0)`),
+      trx.raw(`SELECT setval('thingful_users_id_seq', 0)`),
+      trx.raw(`SELECT setval('thingful_reviews_id_seq', 0)`)
+      ])
+    )
+  );
 }
 
 function seedUsers(db, users) {
@@ -249,21 +269,29 @@ function seedUsers(db, users) {
    }
   
 
-  function seedThingsTables(db, users, things, average_review_rating=[]) {
+   function seedThingsTables(db, users, things, reviews = []) {
     // use a transaction to group the queries and auto rollback on any failure
     return db.transaction(async trx => {
-     await seedUsers(trx, users)
-     await trx.into('thingful_things').insert(things)
+      await seedUsers(trx, users)
+      await trx.into("thingful_things").insert(things);
       // update the auto sequence to match the forced id values
-     await trx.raw(
-       `SELECT setval('thingful_things_id_seq', ?)`,
-       [things[things.length - 1].id])
-     }
-     )
-    }
+      await Promise.all([
+        trx.raw(`SELECT setval('thingful_users_id_seq', ?)`, [
+          users[users.length - 1].id
+        ]),
+        trx.raw(`SELECT setval('thingful_things_id_seq', ?)`, [
+          things[things.length - 1].id
+        ])
+      ]);
       // only insert reviews if there are some, also update the sequence counter
-  
-
+      if (reviews.length) {
+        await trx.into("thingful_reviews").insert(reviews);
+        await trx.raw(`SELECT setval('thingful_reviews_id_seq', ?)`, [
+          reviews[reviews.length - 1].id
+        ]);
+      }
+    });
+  }
 
   function seedMaliciousThing(db, user, thing) {
     return seedUsers(db, [user])
@@ -274,10 +302,10 @@ function seedUsers(db, users) {
       )
   }
 
-  function makeAuthHeader(user) {
-    const token = Buffer.from(`${user.user_name}:${user.password}`).toString('base64')
-    return `Basic ${token}`
-  }
+function makeAuthHeader(user) {
+  const token = Buffer.from(`${user.user_name}:${user.password}`).toString('base64')
+  return `Basic ${token}`
+}
 
   module.exports = {
     makeUsersArray,

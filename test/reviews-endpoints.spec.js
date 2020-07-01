@@ -26,6 +26,7 @@ describe('Reviews Endpoints', function() {
 
   describe(`POST /api/reviews`, () => {
     beforeEach('insert things', () =>
+      
       helpers.seedThingsTables(
         db,
         testUsers,
@@ -77,7 +78,7 @@ describe('Reviews Endpoints', function() {
         )
     })
 
-    const requiredFields = ['text', 'rating', 'user_id', 'thing_id']
+    const requiredFields = ['text', 'rating', 'thing_id']
 
     requiredFields.forEach(field => {
       const testThing = testThings[0]

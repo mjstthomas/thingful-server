@@ -173,7 +173,7 @@ describe('Things Endpoints', function() {
       )
 
       it('responds with 200 and the specified reviews', () => {
-        const thingId = 1
+        const thingId = 4
         const expectedReviews = helpers.makeExpectedThingReviews(
           testUsers, thingId, testReviews
         )
