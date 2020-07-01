@@ -1,6 +1,6 @@
 const express = require('express')
 const ThingsService = require('./things-service')
-const basicAuth = require('../middleware/basic-auth')
+const { requireAuth } = require("../middleware/Auth-service");
 
 const thingsRouter = express.Router()
 
@@ -16,14 +16,14 @@ thingsRouter
 
 thingsRouter
   .route('/:thing_id')
-  .all(basicAuth)
+  .all(requireAuth)
   .all(checkThingExists)
   .get((req, res) => {
     res.json(ThingsService.serializeThing(res.thing))
   })
 
 thingsRouter.route('/:thing_id/reviews/')
-  .all(basicAuth)
+  .all(requireAuth)
   .all(checkThingExists)
   .get((req, res, next) => {
     ThingsService.getReviewsForThing(
