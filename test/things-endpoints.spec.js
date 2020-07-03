@@ -85,7 +85,7 @@ describe('Things Endpoints', function() {
       })
     })
   })
-  describe.only('protected endpoints', ()=>{
+  describe('protected endpoints', ()=>{
     beforeEach('insert things', ()=>{
       helpers.seedThingsTables(
         db,
