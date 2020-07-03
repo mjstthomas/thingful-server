@@ -8,21 +8,14 @@ TRUNCATE
 
 INSERT INTO thingful_users (user_name, full_name, nickname, password)
 VALUES
-<<<<<<< HEAD
+
   ('dunder', 'Dunder Mifflin', null, '$2a$10$stSTf3azWNucsCVJ5znzw.XIkCklcYaEXLu3DlUax.Gr5HN0/m/RO'),
   ('b.deboop', 'Bodeep Deboop', 'Bo', '$2a$10$X9XCmgSFzYmrvgUUKRjM2ua.1jd1UCHhR9g3j8HSvaWUcChUYsABu' ),
   ('c.bloggs', 'Charlie Bloggs', 'Charlie', '$2a$10$3ZLCTL/FSoWG91eso4U1E.FTh34aiquUqLkn9fLZYS9eFBBo3K1SS' ),
   ('s.smith', 'Sam Smith', 'Sam', '$2a$10$6Ztaq2A5hc7NhOwiDmZMFuuxB/kRHky0183T9dVXO.LAJ.MpcSo3S'),
   ('lexlor', 'Alex Taylor', 'Lex', '$2a$10$FLikJj6ho5z6jZOoLyndtuZLcXm2rSgZL2lo9OT5Ogd88elJq19qa'),
   ('wippy', 'Ping Won In', 'Ping', '$2a$10$UywSwv5CQhcLUq00nQ/a.uvliaDWhaeC87RV75u14h5.A8peEXdny');
-=======
-  ('dunder', 'Dunder Mifflin', null, '$2a$12$gacnKTBKywim4txyuUDOTOUiO6tyNi2nvSL8qNDA73gX.G6VZ8SUi'),
-  ('b.deboop', 'Bodeep Deboop', 'Bo', '$2a$12$pBq4tnr2U1nOZDE45xF3IOCRB1cT5w2wsAy1SL16W7Fg6NysbYbtW'),
-  ('c.bloggs', 'Charlie Bloggs', 'Charlie', '$2a$12$XTSVITPUQCaNLaMfpp/cPejDTOirDG5s6ZSVUAQ0Gv85luhwfQT6K'),
-  ('s.smith', 'Sam Smith', 'Sam', '$2a$12$WfCA791itudMreM3ccWzOuNVx3/.0wMhCyvpjFx3wHLpKEWonQIqi'),
-  ('lexlor', 'Alex Taylor', 'Lex', '$2a$12$nwcnNNFciTlfL0YbK3cVZeKuZpPG2Itcswfu7ntFPl5CaOAoZGbKm'),
-  ('wippy', 'Ping Won In', 'Ping', '$2a$12$eSj8L4X3MTY8.TSyF4xWd.3I7yScIhrNdaIvtuhw0BrLFSHiMyyee');
->>>>>>> b1afca704d18aa5795ae598ae598446add3b7bae
+
 
 INSERT INTO thingful_things (title, image, user_id, content)
 VALUES

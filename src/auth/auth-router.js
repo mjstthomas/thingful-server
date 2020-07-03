@@ -34,8 +34,6 @@ authRouter
              })
         })
         .catch(next)
-    
-        
   })
 
 module.exports = authRouter

@@ -1,6 +1,7 @@
 const knex = require('knex')
 const app = require('../src/app')
 const helpers = require('./test-helpers')
+const jwt = require('jsonwebtoken')
 const supertest = require('supertest')
 
 describe.only('Auth Endpoints', function() {
@@ -57,7 +58,7 @@ describe.only('Auth Endpoints', function() {
       return supertest(app)
         .post('/api/auth/login')
         .send(userInvalidUser)
-        .expect(400, {error: 'missing user_name or password'})
+        .expect(400, {error: 'Incorrect user_name or password'})
     })
 
     it.only(`responds 400 'invalid user_name or password' when bad password`, () => {
