@@ -1,6 +1,7 @@
 const knex = require('knex')
 const app = require('../src/app')
 const helpers = require('./test-helpers')
+const jwt = require('jsonwebtoken')
 const supertest = require('supertest')
 
 describe.only('Auth Endpoints', function() {
@@ -40,7 +41,7 @@ describe.only('Auth Endpoints', function() {
         }
 
 
-    it.only(`responds with 400 required error when '${field}' is missing`, ()=>{
+    it  (`responds with 400 required error when '${field}' is missing`, ()=>{
         delete loginAttemptedBody[field]
     
         return supertest(app)
@@ -57,6 +58,37 @@ describe.only('Auth Endpoints', function() {
       return supertest(app)
         .post('/api/auth/login')
         .send(userInvalidUser)
-        .expect(400, {error: 'missing user_name or password'})
+        .expect(400, {error: 'Incorrect user_name or password'})
     })
+    it(`responds 400 'invalid user_name or password' when bad password`, () => {
+           const userInvalidPass = { user_name: testUser.user_name, password: 'incorrect' }
+           return supertest(app)
+             .post('/api/auth/login')
+             .send(userInvalidPass)
+             .expect(400, { error: `Incorrect user_name or password` })
+         })
+
+    it(`responds 200 and JWT auth token using secret when valid credentials`, () => {
+          const userValidCreds = {
+            user_name: testUser.user_name,
+            password: testUser.password,
+          }
+      
+          const expectedToken = jwt.sign(
+            { user_id: testUser.id }, // payload
+            process.env.JWT_SECRET,
+            {
+              subject: testUser.user_name,
+              algorithm: 'HS256',
+            }
+          )
+          return supertest(app)
+            .post('/api/auth/login')
+            .send(userValidCreds)
+            .expect(200, {
+              authToken: expectedToken,
+            })
+        })
+
+    
 })
