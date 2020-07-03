@@ -40,7 +40,7 @@ describe.only('Auth Endpoints', function() {
         }
 
 
-    it.only(`responds with 400 required error when '${field}' is missing`, ()=>{
+    it(`responds with 400 required error when '${field}' is missing`, ()=>{
         delete loginAttemptedBody[field]
     
         return supertest(app)
@@ -59,4 +59,15 @@ describe.only('Auth Endpoints', function() {
         .send(userInvalidUser)
         .expect(400, {error: 'missing user_name or password'})
     })
+
+    it.only(`responds 400 'invalid user_name or password' when bad password`, () => {
+           const userInvalidPass = { 
+              user_name: testUser.user_name,
+              password: 'incorrect' }
+          console.log(testUser.user_name)
+           return supertest(app)
+             .post('/api/auth/login')
+             .send(userInvalidPass)
+             .expect(400, { error: `Incorrect user_name or password` })
+         })
 })
