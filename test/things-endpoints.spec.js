@@ -98,7 +98,7 @@ describe('Things Endpoints', function() {
       it('responds with 401 missing basic token', ()=>{
         return supertest(app)
         .get('/api/things/123')
-        .expect(401, {error: 'missing basic authorization'})
+        .expect(401, {error: 'Missing bearer token'})
       })
     })
 
